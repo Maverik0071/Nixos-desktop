@@ -118,19 +118,28 @@
   #services.xserver.desktopManager.xterm.enabe = false;
   #services.xserver.displayManager.lightdm.enable = true;
   services.xserver.windowManager.i3.enable = true;
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.displayManager.sddm.wayland.enable = true;
+  #services.xserver.displayManager.sddm.enable = true;
+  #services.xserver.displayManager.sddm.wayland.enable = true;
   # services.xserver.displayManager.sddm.theme = "breeze";
   # services.xserver.displayManager.ly.enable = true;  
   # services.xserver.videoDrivers = [ "amdgpu" ];
 
+  # gnome desktop
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+  services.dbus.packages = with pkgs; [ gnome2.GConf ];
+  programs.dconf.enable = true;
+  #environment.systemPackages = with pkgs; [ gnomeExtensions.appindicator ];
+  services.udev.packages = with pkgs; [ gnome.gnome-settings-daemon ];
+  nixpkgs.config.allowAliases = false;
+  services.sysprof.enable = true;
 
   # Enable the XFCE Desktop Environment.
   # services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.xfce.enable = true;
+  #services.xserver.desktopManager.xfce.enable = true;
   
   # hyprland
-  programs.hyprland.enable = true;
+  # programs.hyprland.enable = true;
 
   # Configure keymap in X11
   services.xserver = {
@@ -142,8 +151,9 @@
   services.flatpak.enable = true;
   xdg.portal.enable = true;
   
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk];
-  xdg.portal.config.common.default = "gtk";
+  # xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
+  #xdg.portal.config.common.default = "gtk";
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -227,6 +237,18 @@
     zsh-history-substring-search
     zsh-fast-syntax-highlighting
     nixd
+
+  # gnome software
+    gnome.gnome-software
+    gnome.gnome-packagekit
+    gnome.gnome-tweaks
+    gnomeExtensions.dock-reloaded
+    qgnomeplatform-qt6
+    qgnomeplatform
+  # xdg-desktop-portal-gnome
+    lomiri.gmenuharness
+  # gnome-gnome-settings-daemon
+
   #bootstrapping
     gzip
     wget
@@ -253,6 +275,10 @@
     xsensors
     qt6.qtbase
     fanctl
+  # cope
+    gnumake
+    gnumake42
+
    #i3wm pkgs
     dmenu
     rofi
@@ -279,6 +305,7 @@
     clipmenu
     volumeicon
     brightnessctl
+
   # fonts and themes
     hermit
     source-code-pro
@@ -300,6 +327,7 @@
     luna-icons
     variety
     sweet
+
    #vim and programming 
     vimPlugins.nvim-treesitter-textsubjects
     nixos-install-tools
@@ -309,6 +337,7 @@
     clipit
     rofi-power-menu
     blueberry
+
    #misc
     steam
     pkgs.steamPackages.steam-runtime
@@ -322,7 +351,6 @@
     tlp
     pkgs.ly
     dhcpdump
-    lf
     btop
     postgresql
     w3m
@@ -333,7 +361,7 @@
     pcsctools
     pcsclite
     pkgs.opensc
-    pkgs.ark
+  # pkgs.ark
     pam_p11
     pam_usb
     nss
@@ -382,15 +410,15 @@
     fonts = {
     fonts = with pkgs; [
       noto-fonts
-      noto-fonts-cjk
-      noto-fonts-emoji
+   #  noto-fonts-cjk
+   #  noto-fonts-emoji
       font-awesome
       font-awesome_5
       font-awesome_4
       source-han-sans
       open-sans
-      source-han-sans-japanese
-      source-han-serif-japanese
+   #  source-han-sans-japanese
+   #  source-han-serif-japanese
       openmoji-color
     ];
     fontconfig.defaultFonts = {
@@ -417,7 +445,9 @@
     nixpkgs.config.permittedInsecurePackages = [
     "nodejs-12.22.12"
     "python-2.7.18.7"
+    "nix-2.16.2"
   ];
+    
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -429,8 +459,26 @@
 
   # List services that you want to enable:
     services.sshd.enable = true;
-    services.tlp.enable = true;
+   # services.tlp.enable = true;
     services.pcscd.enable = true;
+
+  #gnome services
+  services.xserver.displayManager.gdm.autoSuspend = true;
+  programs.gnome-disks.enable = true;
+  services.gnome.core-shell.enable = true;
+  services.gnome.core-utilities.enable = true;
+  services.gnome.gnome-settings-daemon.enable = true;
+  services.gnome.gnome-user-share.enable = true;
+  services.system76-scheduler.settings.processScheduler.foregroundBoost.enable = true;
+  services.gnome.gnome-remote-desktop.enable = true;
+  services.gnome.core-os-services.enable = true;
+  services.gnome.gnome-online-accounts.enable = true;
+  programs.file-roller.enable = true;
+  qt.platformTheme = [
+  "gnome"
+  "gtk2"
+  "gt5ct"
+  ];
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
